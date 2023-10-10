@@ -15,6 +15,11 @@ import tempfile
 st.title("ChatPDF")
 st.write("---")
 
+from streamlit_extras.buy_me_a_coffee import button
+
+button(username="inMyUniverse", floating=True, width=221)
+
+
 #OpenAI KEY 입력 받기
 openai_key = st.text_input('OPEN_AI_API_KEY', type="password")
 
