@@ -19,7 +19,8 @@ with st.sidebar:
             )
     st.markdown("인공지능을 활용하여 정확하고 논리적인 내용을 담은 레포트를 빠르게 작성할 수 있습니다.")
     st.markdown("---")
-    openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+    
+    openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
    
     
@@ -37,7 +38,7 @@ def generate_report_draft(age, topic, length, emphasis, language):
     # 프롬프트 템플릿 설정
     template = """
     [Language: {language}]
-    As an assistant, create a report draft considering an writer of age {age}. The topic is: {topic}.
+    As an assistant, create a report draft considering an audience of age {age}. The topic is: {topic}.
     Length: A4 {length} pages.
     Emphasize on: {emphasis}.
     Structure:
@@ -80,5 +81,7 @@ with st.form("report_form"):
         if language_input == "Other" and not custom_language_input:
             st.warning("사용한 언어를 직접 적어주세요")   
         generate_report_draft(age_input, topic_input, length_input, emphasis_input, language_input)
+
+
 
 
