@@ -63,9 +63,22 @@ with st.form("report_form"):
     emphasis_input = st.text_area("강조하고 싶은 부분을 알려주세요")
     language_input = st.selectbox("사용할 언어를 선택해주세요", [ "Korean", "English", "Japanese", "Chinese", "Other"])
     submitted = st.form_submit_button("시작하기")
+    if language_input == "Other":
+     custom_language_input = st.text_input("사용할 언어를 적어주세요")
+    # Update language_input with the custom language if provided
+     if custom_language_input:
+        language_input = custom_language_input
+    
     if not openai_api_key:
-        st.info("왼쪽 하단의 OpenAI API key 를 입력해주세요")
+        st.info("왼쪽 하단의 OpenAI API key 를 입력해주세요")  
+    
     elif submitted:
+        if not topic_input:
+            st.warning("주제를 작성해주세요!")
+        if age_input < 10 or age_input > 100:
+            st.warning("10-100 사이 연령을 입력해주세요")
+        if language_input == "Other" and not custom_language_input:
+            st.warning("사용한 언어를 직접 적어주세요")   
         generate_report_draft(age_input, topic_input, length_input, emphasis_input, language_input)
 
 
