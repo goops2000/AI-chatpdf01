@@ -81,14 +81,14 @@ with st.form("report_form"):
      if not openai_api_key:
         st.warning("OpenAI API key를 입력해주세요")
      else:
-        if not topic_input:
-            st.warning("주제를 작성해주세요!")
-        if age_input < 10 or age_input > 100:
-            st.warning("10-100 사이 연령을 입력해주세요")
-        if language_input == "Other" and not custom_language_input:
-            st.warning("사용한 언어를 직접 적어주세요")   
-        else:
-            with st.spinner('열심히 작성중이니 기다려주세요...🫨'):
-                generate_report_draft(age_input, topic_input, length_input, emphasis_input, language_input, openai_api_key)
-
+       if not topic_input:
+         st.warning("주제를 작성해주세요!")
+       elif age_input < 10 or age_input > 100:
+         st.warning("10-100 사이 연령을 입력해주세요")
+       elif language_input == "Other" and not custom_language_input:
+         st.warning("사용할 언어를 직접 적어주세요")
+       else:
+        # 모든 조건이 충족되었을 때 실행
+         with st.spinner('열심히 작성중이니 기다려주세요...🫨'):
+            generate_report_draft(age_input, topic_input, length_input, emphasis_input, language_input, openai_api_key)
 

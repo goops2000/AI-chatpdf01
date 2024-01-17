@@ -58,7 +58,7 @@ with st.form("report_form"):
    age_input = st.number_input("Please enter your age range", min_value=10, max_value=100)
    topic_input = st.text_input("Please enter the topic", "")
    length_input = st.select_slider("Please select the length", options=['1', '2', '3'], value='3')
-   emphasis_input = st.text_area("Please tell us what aspects you would like to emphasize")
+   emphasis_input = st.text_area("Please let me know if there are any points you would like to emphasize or specific requests. The more detailed your input, the more accurate the report will be.")
    language_input = st.selectbox("Please select the language to use", ["English", "Spanish", "French", "German", "Chinese", "Other"])
    if language_input == "Other":
     custom_language_input = st.text_input("Please enter your language")
@@ -75,9 +75,9 @@ with st.form("report_form"):
     else:
         if not topic_input:
             st.warning("Please enter a topic.")
-        if age_input < 10 or age_input > 100:
+        elif age_input < 10 or age_input > 100:
             st.warning("Please enter a valid age range.")
-        if language_input == "Other" and not custom_language_input:
+        elif language_input == "Other" and not custom_language_input:
             st.warning("Please enter your language.")
         else:
             with st.spinner('Please wait...🫨'):
