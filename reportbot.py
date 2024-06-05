@@ -69,7 +69,7 @@ def generate_report_draft(age, topic, length, emphasis, language, openai_api_key
         prompt_query = report_prompt_template.format(age=age, topic=topic, length=length, emphasis=emphasis, language=language) 
 
         response = llm.invoke(prompt_query)
-        st.write(response)
+      
 
 
 # 사용자 입력 폼 설정
