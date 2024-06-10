@@ -1,10 +1,22 @@
 from langchain.prompts import PromptTemplate
 from langchain.chat_models import ChatOpenAI
 
+
 import streamlit as st
 
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain.callbacks.base import BaseCallbackHandler
 
-
+         #Stream 받아 줄 Hander 만들기
+from langchain.callbacks.base import BaseCallbackHandler
+class StreamHandler(BaseCallbackHandler):
+    def __init__(self, container, initial_text=""):
+            self.container = container
+            self.text=initial_text
+    def on_llm_new_token(self, token: str, **kwargs) -> None:
+            self.text+=token
+            self.container.markdown(self.text)
+     
 
 from streamlit_extras.buy_me_a_coffee import button
 
@@ -23,10 +35,8 @@ with st.sidebar:
     st.markdown("인공지능을 활용하여 정확하고 논리적인 내용을 담은 레포트를 빠르게 작성할 수 있습니다.")
     st.markdown("---")
     
-   
-    "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
-   
-    
+
+       
 
 
 # Streamlit UI 설정
@@ -35,12 +45,13 @@ st.title("📝 Report Master")
 openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 # 레포트 초안 생성 함수
 
-def generate_report_draft(age, topic, length, emphasis, language, openai_api_key):
+def generate_report_draft(age, topic, length, emphasis, language, openai_api_key, stream_hander):
 
      
+
         
         # LLM 모델 인스턴스화
-        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai_api_key, streaming=True)
+        llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai_api_key, streaming=True,   callbacks=[stream_hander],)
 
         # PromptTemplate를 사용한 대화 형식의 프롬프트 설정
         report_prompt_template = PromptTemplate(
@@ -55,10 +66,10 @@ def generate_report_draft(age, topic, length, emphasis, language, openai_api_key
         )
 
         # PromptTemplate을 사용하여 프롬프트 포맷팅
-        prompt_query = report_prompt_template.format(age=age, topic=topic, length=length, emphasis=emphasis, language=language)
-        print(prompt_query)
-        response = llm.predict(prompt_query)
-        st.info(response)
+        prompt_query = report_prompt_template.format(age=age, topic=topic, length=length, emphasis=emphasis, language=language) 
+
+        response = llm.invoke(prompt_query)
+      
 
 
 # 사용자 입력 폼 설정
@@ -90,5 +101,7 @@ with st.form("report_form"):
        else:
         # 모든 조건이 충족되었을 때 실행
          with st.spinner('열심히 작성중이니 기다려주세요...🫨'):
-            generate_report_draft(age_input, topic_input, length_input, emphasis_input, language_input, openai_api_key)
-
+          chat_box = st.empty()
+          stream_hander = StreamHandler(chat_box)
+          generate_report_draft(age_input, topic_input, length_input, emphasis_input, language_input, openai_api_key, stream_hander)
+           
